@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusTrade</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- 3. Configure Tailwind to use Inter font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                },
+                animation: {
+                    'float-up-down': 'float-up-down 1.5s ease-in-out infinite',
+                    'float-left-right': 'float-left-right 3.5s ease-in-out infinite',
+                    'fade-in-out': 'fade-in-out 3s ease-in-out infinite',
+                    'page-enter': 'page-fade-in 0.7s ease-out forwards',
+                },
+                keyframes: {
+                    'float-up-down': {
+                        '0%, 100%': { transform: 'translateY(-10px)' },
+                        '50%': { transform: 'translateY(10px)' },
+                    },
+                    'fade-in-out': {
+                        '0%, 100%': { opacity: '1' },
+                        '50%': { opacity: '0.3' },
+                    },
+                    'float-left-right': {
+                        '0%, 100%': { transform: 'translateX(-8px)' },
+                        '50%': { transform: 'translateX(8px)' },
+                    },
+                    'page-fade-in': {
+                        'from': { opacity: '0' },
+                        'to': { opacity: '1' },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* A small custom style for the hero highlight */
+        .text-gradient-yellow { /* Gradient for "don't!" text */
+            background: linear-gradient(to right, #FF9900, #39FF14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-purple-pink {
+            background: linear-gradient(to right, #DF3B9F, #6B21A8); /* Using brand-pink to brand-purple */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-white animate-page-enter">
+
+    <!-- App Wrapper -->
+    <div class="min-h-screen flex flex-col">
+
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    
+                    <!-- Logo and Nav Links -->
+                    <div class="flex items-center space-x-8">
+                        <!-- Logo -->
+                        <a href="#" class="flex items-center space-x-2">
+                            <!-- Original SVG Logo Icon (Store) - Commented out -->
+                            <!--
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 6.2C3 5.0799 3 4.51984 3.21799 4.09202C3.40973 3.71569 3.71569 3.40973 4.09202 3.21799C4.51984 3 5.0799 3 6.2 3H17.8C18.9201 3 19.4802 3 19.908 3.21799C20.2843 3.40973 20.5903 3.71569 20.782 4.09202C21 4.51984 21 5.0799 21 6.2V21L18 19L15 21L12 19L9 21L6 19L3 21V6.2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 3V11L12 9L15 11V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            -->
+
+                            <!-- Alternative 1: Graduation Cap (Academic Theme) -->
+                            <!-- Uncomment this block if you prefer a more academic-focused logo -->
+                            <!--
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0l-2.172 1.923A59.902 59.902 0 0012 15.543a59.902 59.902 0 0010.399-5.84l-2.172-1.923" />
+                            </svg>
+                            -->
+
+                            <!-- Alternative 2: Shopping Bag (Marketplace Theme) -->
+                            <!-- Uncomment this block if you prefer a more direct marketplace logo -->
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+
+                            <!-- Alternative 3: Arrows Right Left (Exchange/Trade Theme) -->
+                            <!-- Uncomment this block if you prefer a logo emphasizing exchange between students -->
+                            <!--
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                            </svg>
+                            -->
+                            <span class="font-poppins font-extrabold text-2xl text-gray-900 flex items-center">
+                                Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                            </span>
+                        </a>
+                        
+                    </div>
+
+                    <!-- Desktop Nav Links -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <!-- User Greeting -->
+                        <div class="relative">
+                            <button id="notification-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View notifications</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                            </button>
+                            <!-- Notification Bubble (Increased Height) -->
+                            <div id="notification-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Notifications</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">You have no new notifications.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Wishlist Button -->
+                        <div class="relative">
+                            <button id="wishlist-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View wishlist</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                            </button>
+                            <!-- Wishlist Bubble -->
+                            <div id="wishlist-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Wishlist</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">Your wishlist is empty.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Wishlist Button -->
+                        <!-- Cart Button -->
+                        <div class="relative">
+                            <button id="cart-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View cart</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.841A1.125 1.125 0 0018.102 6H4.227l-.513-1.922A1.125 1.125 0 002.626 3H2.25z" />
+                                </svg>
+                            </button>
+                            <!-- Cart Bubble -->
+                            <div id="cart-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Shopping Cart</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.841A1.125 1.125 0 0018.102 6H4.227l-.513-1.922A1.125 1.125 0 002.626 3H2.25z" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">Your cart is empty.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Profile Button -->
+                        <a href="profile.html" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                            <span class="sr-only">View profile</span>
+                            <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500">
+                            <span class="sr-only">Open main menu</span>
+                            <!-- SVG Hamburger Icon -->
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+            </nav>
+
+            <!-- Mobile Menu, hidden by default -->
+            <div id="mobile-menu" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="browse.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Browse</a>
+                    <a href="sell_item.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Sell</a>
+                    <a href="categories.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Categories</a>
+                    <a href="help-center.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Help</a>
+                    <a href="profile.html" class="block w-full text-left px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple rounded-lg">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Hero Section - Background color changed to light purple -->
+            <section class="bg-purple-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                        
+                        <!-- Hero Text -->
+                        <div class="text-center md:text-left">
+                            <!-- Student Tag (Updated) -->
+                            <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-semibold bg-purple-100 text-purple-800 mb-4 -mt-10">
+                                <!-- SVG Scholar Cap Icon -->
+                                <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0l-2.172 1.923A59.902 59.902 0 0012 15.543a59.902 59.902 0 0010.399-5.84l-2.172-1.923" />
+                                </svg>
+                                For Students, By Students
+                            </span>
+                            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight">
+                                <span class="text-gray-900">Get what</span>
+                                <span class="block text-gradient-purple-pink py-1">you need,</span>
+                                <span class="block text-gray-900">Share what you</span>
+                                <span class="block text-gradient-yellow">don't!</span>
+                            </h1>
+                            <p class="mt-6 text-lg text-gray-600 max-w-lg mx-auto md:mx-0">
+                                The ultimate marketplace for college students. Find textbooks, electronics, furniture, and more at student-friendly prices. Connect with your campus community!
+                            </p>
+                            <div class="mt-10 flex flex-col sm:flex-row sm:justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                                <a href="#categories-section" class="inline-flex items-center justify-center px-7 py-3 text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple rounded-lg shadow-lg hover:opacity-90 transition-opacity">
+                                    Start Shopping
+                                    <!-- SVG Arrow Right Icon -->
+                                    <svg class="w-5 h-5 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                    </svg>
+                                </a>
+                                <a href="sell_item.html" class="inline-flex items-center justify-center px-7 py-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <!-- SVG Plus Icon -->
+                                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    Sell Your Items
+                                </a>
+                            </div>
+                            <div class="mt-10 flex justify-center md:justify-start space-x-6 sm:space-x-8">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <!-- SVG Users Icon -->
+                                    <svg class="w-5 h-5 mr-2 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-4.682 2.72a3 3 0 01-4.682-2.72m4.682 2.72v.003M18 18.72v.003m-3.49-1.126a9.094 9.094 0 01-3.741-.479 3 3 0 01-4.682-2.72M12 18.72v.003m-3.49-1.126a9.094 9.094 0 00-3.741-.479 3 3 0 00-4.682-2.72m4.682 2.72a3 3 0 014.682 2.72M12 18.72v.003m3.49-1.126a9.094 9.094 0 013.741-.479 3 3 0 014.682 2.72m-4.682 2.72a3 3 0 004.682 2.72m-4.682-2.72v.003M3.49 14.626a9.094 9.094 0 013.741.479 3 3 0 014.682 2.72m-4.682-2.72a3 3 0 00-4.682 2.72m4.682-2.72v.003m-3.49-1.126a9.094 9.094 0 01-3.741.479 3 3 0 01-4.682 2.72M12 3.472a9.094 9.094 0 00-3.741.479 3 3 0 00-4.682 2.72M12 3.472a9.094 9.094 0 013.741.479 3 3 0 014.682 2.72M12 3.472v.003" />
+                                    </svg>
+                                    50k+ Students
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <!-- SVG Verified Icon -->
+                                    <svg class="w-5 h-5 mr-2 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Verified Sellers
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <!-- SVG Truck Icon -->
+                                    <svg class="w-5 h-5 mr-2 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5h10.5m-10.5-4.5V6.375c0-.621.504-1.125 1.125-1.125h14.25c.621 0 1.125.504 1.125 1.125v10.5m-17.25-4.5h10.5" />
+                                    </svg>
+                                    Campus Delivery
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hero Image & Floating Icons -->
+                        <div class="relative flex items-center justify-center">
+                            <!-- Placeholder Image -->
+                            <div class="relative inline-block">
+                                <img src="doodlefinal.png" 
+                                     alt="Illustration of students trading items on campus" 
+                                     class="rounded-3xl shadow-2xl z-10 -ml-14"
+                                     width="1433"
+                                     height="933">
+                                
+                                <!-- Floating Doodle Icon -->
+                                <img src="doodle1.png" 
+                                     alt="Floating doodle icon" 
+                                    class="absolute w-[120px] h-[120px] z-20 animate-float-up-down transform -translate-x-1/2 -translate-y-1/2 top-[-57px] left-[-103px]">
+                                
+                                <!-- Floating Doodle Icon 2 (Bottom Left) -->
+                                <img src="doodle2.png" 
+                                     alt="Floating doodle icon 2" 
+                                     class="absolute bottom-[75px] left-0 w-16 h-16 z-20 animate-fade-in-out transform -translate-x-1/2 translate-y-1/2"
+                                     style="margin-left: -56px;">
+                                
+                                <!-- Floating Doodle Icon 3 (Right of green tree) -->
+                                <img src="doodle3.png" 
+                                     alt="Floating doodle icon 3" 
+                                     class="absolute w-[77px] h-[77px] z-20 animate-fade-in-out top-[85px] right-[-2px]">
+
+                                <!-- Floating Doodle Icon 4 (Bottom Right) -->
+                                <img src="doodle4.png" 
+                                     alt="Floating doodle icon 4" 
+                                     class="absolute bottom-0 right-[76px] w-[72px] h-[72px] z-20 animate-bounce transform translate-x-1/2 translate-y-1/2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Shop by Category Section -->
+            <section id="categories-section" class="py-16 md:py-24 bg-white scroll-mt-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center">
+                        Shop Items by <span class="text-brand-purple">Category</span>
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 text-center max-w-2xl mx-auto">
+                        Find exactly what you need for your college journey...
+                    </p>
+
+                    <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <!-- Category Card 1: Books -->
+                        <a href="books.html" class="group">
+                            <div class="flex flex-col items-center justify-center p-6 bg-blue-50 rounded-2xl aspect-square transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 flex items-center justify-center bg-blue-100 rounded-full">
+                                    <!-- SVG Book Icon -->
+                                    <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-4 font-semibold text-lg text-gray-900">Books</h3>
+                                <p class="mt-1 text-sm text-gray-600 text-center">New and used textbooks</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Category Card 2: Electronics -->
+                        <a href="electronics.html" class="group">
+                            <div class="flex flex-col items-center justify-center p-6 bg-purple-50 rounded-2xl aspect-square transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 flex items-center justify-center bg-purple-100 rounded-full">
+                                    <!-- SVG Laptop Icon -->
+                                    <svg class="w-8 h-8 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-1.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-4 font-semibold text-lg text-gray-900">Electronics</h3>
+                                <p class="mt-1 text-sm text-gray-600 text-center">Laptops, tablets & gadgets</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Category Card 3: Stationary -->
+                        <a href="stationary.html" class="group">
+                            <div class="flex flex-col items-center justify-center p-6 bg-yellow-50 rounded-2xl aspect-square transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 flex items-center justify-center bg-yellow-100 rounded-full">
+                                    <!-- SVG Pencil Icon -->
+                                    <svg class="w-8 h-8 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-4 font-semibold text-lg text-gray-900">Stationary</h3>
+                                <p class="mt-1 text-sm text-gray-600 text-center">Pens, notebooks & supplies</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Category Card 4: Sports & Fitness -->
+                        <a href="sports-fitness.html" class="group">
+                            <div class="flex flex-col items-center justify-center p-6 bg-red-50 rounded-2xl aspect-square transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 flex items-center justify-center bg-red-100 rounded-full">
+                                    <!-- SVG Dumbbell Icon -->
+                                    <svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5h10.5v1.5H6.75V7.5zm10.5 9H6.75v1.5h10.5v-1.5zM6 12h12M5.25 7.5V18M18.75 7.5V18" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-4 font-semibold text-lg text-gray-900">Sports & Fitness</h3>
+                                <p class="mt-1 text-sm text-gray-600 text-center">Gear for your active lifestyle</p>
+                            </div>
+                        </a>
+
+                        <!-- Category Card 5: Dorm Essentials -->
+                        <a href="dorm-essentials.html" class="group col-span-2 sm:col-span-1">
+                            <div class="flex flex-col items-center justify-center p-6 bg-green-50 rounded-2xl aspect-square transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 flex items-center justify-center bg-green-100 rounded-full">
+                                    <!-- SVG Lamp Icon -->
+                                    <svg class="w-8 h-8 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6H6a6 6 0 006 6zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75V3" />
+                                    </svg>
+                                </div>
+                                <h3 class="mt-4 font-semibold text-lg text-gray-900">Dorm Essentials</h3>
+                                <p class="mt-1 text-sm text-gray-600 text-center">Lamps, decor & more</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Us Section -->
+            <section class="py-16 md:py-24 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center">
+                        Why Choose <span class="text-brand-purple">CampusTrade</span>?
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-600 text-center max-w-2xl mx-auto">
+                        Built specifically for the college community
+                    </p>
+
+                    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Feature Card 1 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                                <!-- SVG Verified Icon -->
+                                <svg class="w-7 h-7 text-brand-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-5 font-semibold text-xl text-gray-900">Verified Students Only</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                All users are verified with their college email for a safe and trusted environment.
+                            </p>
+                        </div>
+                        
+                        <!-- Feature Card 2 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                                <!-- SVG Truck Icon -->
+                                <svg class="w-7 h-7 text-brand-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5h10.5m-10.5-4.5V6.375c0-.621.504-1.125 1.125-1.125h14.25c.621 0 1.125.504 1.125 1.125v10.5m-17.25-4.5h10.5" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-5 font-semibold text-xl text-gray-900">Campus Delivery</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                Quick and convenient delivery right to your dorm or campus pickup locations.
+                            </p>
+                        </div>
+                        
+                        <!-- Feature Card 3 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                                <!-- SVG Dollar Icon -->
+                                <svg class="w-7 h-7 text-brand-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182.553-.44 1.253-.659 2.003-.659a4.5 4.5 0 014.242 3.182" />
+                                </svg>
+                            </div>
+                            <h3 class="mt-5 font-semibold text-xl text-gray-900">Student-Friendly Prices</h3>
+                            <p class="mt-2 text-base text-gray-600">
+                                Get the best deals from fellow students who understand your budget constraints.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Suggestions/Feedback Section -->
+            
+
+            <section class="py-16 md:py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+                        Got <span class="text-brand-purple">Suggestions</span> or Feedback?
+                    </h2>
+
+                    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                         Your input helps us make CampusTrade even better for students. Share your thoughts!
+                    </p>
+
+                <div class="mt-8 flex justify-center">
+                    <a href="review.html"
+                    class="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-gradient-to-r from-brand-pink to-brand-purple rounded-xl shadow-lg hover:scale-105 hover:opacity-90 transition-all duration-300">
+
+                <!-- Chat Icon -->
+                <svg class="w-5 h-5 mr-2"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M8 10h8M8 14h5M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 20l1.1-3.3A7.76 7.76 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+
+                Submit a Review
+
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-gray-400">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    
+                    <!-- Footer Column 1: Logo & Social -->
+                    <div class="md:col-span-2">
+                        <a href="#" class="flex items-center space-x-2">
+                            <!-- SVG Logo Icon (Shopping Bag - White) -->
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-2xl text-white flex items-center">
+                                Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                            </span>
+                        </a>
+                        <p class="mt-4 text-sm max-w-xs">
+                            The ultimate marketplace for college students to buy and sell everything they need.
+                        </p>
+                        <div class="mt-6 flex space-x-5">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <span class="sr-only">Facebook</span>
+                                <!-- SVG Facebook Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <span class="sr-only">Instagram</span>
+                                <!-- SVG Instagram Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427C2.013 14.784 2 14.43 2 12s.013-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.48 3.638c.636-.247 1.363-.416 2.427-.465C8.93 2.013 9.284 2 12 2h.315zM12 4.545c-2.42 0-2.75.01-3.71.055-.95.044-1.51.2-1.92.36-.45.17-.8.39-1.15.74a3.397 3.397 0 00-.74 1.15c-.16.41-.316.97-.36 1.92C4.01 9.25 4 9.58 4 12s.01 2.75.055 3.71c.044.95.2 1.51.36 1.92.17.45.39.8.74 1.15.35.35.7.57 1.15.74.41.16.97.316 1.92.36 1.02.048 1.37.058 3.8.058s2.78-.01 3.8-.058c.95-.044 1.51-.2 1.92-.36.45-.17.8-.39 1.15-.74.35-.35.57-.7.74-1.15.16-.41.316-.97.36-1.92.048-1.02.058-1.37.058-3.8s-.01-2.78-.058-3.8c-.044-.95-.2-1.51-.36-1.92a3.397 3.397 0 00-.74-1.15 3.397 3.397 0 00-1.15-.74c-.41-.16-.97-.316-1.92-.36C14.75 4.555 14.42 4.545 12 4.545zM12 9.518a2.482 2.482 0 100 4.964 2.482 2.482 0 000-4.964zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a.937.937 0 100 1.874.937.937 0 000-1.874z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <span class="sr-only">Twitter</span>
+                                <!-- SVG Twitter Icon -->
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Footer Column 3: Support -->
+                    <div class="md:col-start-4">
+                        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Support</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Help Center</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Contact Us</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Report Issue</a></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Sub-Footer (Copyright) -->
+            <div class="bg-gray-900 border-t border-gray-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+                    <p class="text-sm text-gray-500">
+                        &copy; 2024 CampusTrade. All rights reserved. Made with <span class="text-red-500">&hearts;</span> for students.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startShoppingBtn = document.querySelector('a[href="#categories-section"]');
+            if (startShoppingBtn) {
+                startShoppingBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('categories-section').scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+            
+            // --- Centralized Bubble Toggling Logic ---
+            const bubblesConfig = [
+                { buttonId: 'notification-button', bubbleId: 'notification-bubble' },
+                { buttonId: 'wishlist-button', bubbleId: 'wishlist-bubble' },
+                { buttonId: 'cart-button', bubbleId: 'cart-bubble' }
+            ];
+
+            bubblesConfig.forEach(config => {
+                const button = document.getElementById(config.buttonId);
+                const bubble = document.getElementById(config.bubbleId);
+
+                if (button && bubble) {
+                    button.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Prevent click from bubbling to document
+
+                        // Hide all other bubbles
+                        bubblesConfig.forEach(otherConfig => {
+                            if (otherConfig.bubbleId !== config.bubbleId) {
+                                document.getElementById(otherConfig.bubbleId)?.classList.add('hidden');
+                            }
+                        });
+                        // Toggle the current bubble
+                        bubble.classList.toggle('hidden');
+                    });
+                }
+            });
+
+            // Close all bubbles when clicking anywhere on the document outside of a bubble or its button
+            document.addEventListener('click', function(event) {
+                bubblesConfig.forEach(config => {
+                    const button = document.getElementById(config.buttonId);
+                    const bubble = document.getElementById(config.bubbleId);
+                    // Only hide if the click was NOT on the button AND NOT inside the bubble
+                    if (bubble && !bubble.classList.contains('hidden') && !(button?.contains(event.target) || bubble?.contains(event.target))) {
+                        bubble.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

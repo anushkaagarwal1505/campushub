@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CampusTrade</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- 3. Configure Tailwind to use Inter font and brand colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for the sliding panel transition */
+        .container::before {
+            content: '';
+            position: absolute;
+            height: 2000px;
+            width: 2000px;
+            top: -10%;
+            right: 48%;
+            transform: translateY(-50%);
+            background-image: linear-gradient(-45deg, #6B21A8 0%, #DF3B9F 100%);
+            transition: 1.8s ease-in-out;
+            border-radius: 50%;
+            z-index: 6;
+        }
+
+        .container.sign-up-mode::before {
+            transform: translate(100%, -50%);
+            right: 52%;
+        }
+
+        .container.sign-up-mode .left-panel .content {
+            transform: translateY(-800px);
+        }
+
+        .container.sign-up-mode .right-panel .content {
+            transform: translateY(0px);
+        }
+
+        .container.sign-up-mode .signin-signup {
+            left: 25%;
+        }
+
+        .container.sign-up-mode form.sign-in-form {
+            z-index: 1;
+            opacity: 0;
+        }
+
+        .container.sign-up-mode form.sign-up-form {
+            z-index: 2;
+            opacity: 1;
+        }
+
+        .image {
+            transition: transform 1.1s ease-in-out;
+            transition-delay: 0.4s;
+        }
+
+        .container.sign-up-mode .left-panel .image {
+            transform: translateX(-800px);
+        }
+
+        .container.sign-up-mode .right-panel .image {
+            transform: translateX(0px);
+        }
+
+        /* Page Exit Transition */
+        @keyframes slide-up-and-fade {
+            from { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to { 
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+        body.page-exit #container {
+            animation: slide-up-and-fade 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-100">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div id="container" class="container relative w-full max-w-5xl min-h-[700px] bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="forms-container absolute w-full h-full top-0 left-0">
+                <div class="signin-signup absolute left-3/4 -translate-x-1/2 w-1/2 h-full flex flex-col items-center pt-[5cm] transition-all duration-700 ease-in-out z-[7]">
+                    <!-- Sign In Form -->
+                    <form class="sign-in-form w-full max-w-md p-6 md:p-8 space-y-4 z-[2]">
+                        <h2 class="text-3xl font-bold text-gray-900">Welcome Back!</h2>
+                        <p class="mt-2 text-gray-600">Sign in to continue to CampusTrade.</p>
+                        <div class="relative">
+                            <label for="email" class="text-sm font-medium text-gray-700">Email address</label>
+                            <input id="email" name="email" type="email" autocomplete="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                                <a href="forgot-password.html" class="text-sm font-medium text-brand-purple hover:text-brand-pink">Forgot password?</a>
+                            </div>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="button" id="signInButton" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple hover:opacity-90 transition-opacity">Sign In</button>
+                        </div>
+                        <div class="h-5">
+                            <p id="errorMessage" class="text-red-600 text-sm text-center invisible">Please enter your email and password.</p>
+                        </div>
+                    </form>
+
+                    <!-- Sign Up Form -->
+                    <form class="sign-up-form w-full max-w-md p-6 md:p-8 space-y-4 opacity-0 z-[1] -mt-[13cm]">
+                        <h2 class="text-3xl font-bold text-gray-900">Create an Account</h2>
+                        <p class="mt-2 text-gray-600">Join the #1 student marketplace today.</p>
+                        <div>
+                            <label for="name-signup" class="text-sm font-medium text-gray-700">Full Name</label>
+                            <input id="name-signup" name="name-signup" type="text" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="email-signup" class="text-sm font-medium text-gray-700">Email address</label>
+                            <input id="email-signup" name="email-signup" type="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="password-signup" class="text-sm font-medium text-gray-700">Password</label>
+                            <input id="password-signup" name="password-signup" type="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                        </div>
+                        <div>
+                            <button type="button" id="signUpSubmitButton" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-gradient-to-r from-brand-purple to-brand-pink hover:opacity-90 transition-opacity">Sign Up</button>
+                        </div>
+                        <div class="h-5">
+                            <p id="signUpErrorMessage" class="text-red-600 text-sm text-center invisible">Please fill in all details.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panels-container absolute w-full h-full top-0 left-0 grid grid-cols-2">
+                <div class="left-panel flex flex-col items-end justify-around text-center z-[6] pr-[17%] pl-[12%] pb-[2%] pt-[3%]">
+                    <div class="content text-white transition-transform duration-1000 ease-in-out delay-200">
+                        <div class="mb-6 flex items-center justify-center space-x-3">
+                            <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-4xl tracking-tight">Campus<span class="font-cursive text-5xl">Trade</span></span>
+                        </div>
+                        <h3 class="font-poppins font-bold text-3xl">New here ?</h3>
+                        <p class="text-base py-3 opacity-90">Enter your details and start your journey with us.</p>
+                        <button id="sign-up-btn" class="mt-2 w-32 h-10 rounded-full bg-purple-100 border border-purple-200 text-brand-purple font-semibold text-sm hover:bg-purple-200 transition-colors">Sign up</button>
+                    </div>
+                    <img src="doodlefinal.png" class="image w-[400px]" alt="" />
+                </div>
+                <div class="right-panel flex flex-col items-start justify-around text-center z-[6] pl-[17%] pr-[12%] pb-[2%] pt-[3%]">
+                    <div class="content text-white transform translate-y-[800px] transition-transform duration-1000 ease-in-out delay-200">
+                        <div class="mb-6 flex items-center justify-center space-x-3">
+                            <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-4xl tracking-tight">Campus<span class="font-cursive text-5xl">Trade</span></span>
+                        </div>
+                        <h3 class="font-poppins font-bold text-3xl">One of us ?</h3>
+                        <p class="text-base py-3 opacity-90">If you already have an account, just sign in. We've missed you!</p>
+                        <button id="sign-in-btn" class="mt-2 w-32 h-10 rounded-full bg-purple-100 border border-purple-200 text-brand-purple font-semibold text-sm hover:bg-purple-200 transition-colors">Sign in</button>
+                    </div>
+                    <img src="doodlefinal.png" class="image transform translate-x-[800px] w-[400px]" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signUpButton = document.getElementById('sign-up-btn');
+            const signInButtonPanel = document.getElementById('sign-in-btn');
+            const container = document.getElementById('container');
+
+            const signInButton = document.getElementById('signInButton');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const errorMessage = document.getElementById('errorMessage');
+
+            const signUpSubmitButton = document.getElementById('signUpSubmitButton');
+            const nameSignUpInput = document.getElementById('name-signup');
+            const emailSignUpInput = document.getElementById('email-signup');
+            const passwordSignUpInput = document.getElementById('password-signup');
+            const signUpErrorMessage = document.getElementById('signUpErrorMessage');
+
+            // Toggle to Sign Up Mode
+            signUpButton.addEventListener('click', () => {
+                container.classList.add('sign-up-mode');
+            });
+
+            // Toggle back to Sign In Mode
+            signInButtonPanel.addEventListener('click', () => {
+                container.classList.remove('sign-up-mode');
+            });
+
+            // Existing Sign In form validation
+            signInButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                const emailValue = emailInput.value.trim();
+                const passwordValue = passwordInput.value.trim();
+                const isValidDomain = emailValue.endsWith('@akgec.ac.in');
+
+                // Reset borders
+                emailInput.classList.remove('border-red-500');
+                passwordInput.classList.remove('border-red-500');
+
+                if (emailValue === '' || passwordValue === '') {
+                    errorMessage.textContent = 'Please enter your email and password.';
+                    errorMessage.classList.remove('invisible');
+                    if (emailValue === '') emailInput.classList.add('border-red-500');
+                    if (passwordValue === '') passwordInput.classList.add('border-red-500');
+                } else if (!isValidDomain) {
+                    errorMessage.textContent = 'Please use your akgec.ac.in email address.';
+                    errorMessage.classList.remove('invisible');
+                    emailInput.classList.add('border-red-500');
+                } else {
+                    errorMessage.classList.add('invisible');
+                    
+                    // Add fade-out class and redirect after animation
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 500); // 500ms matches the animation duration
+                }
+            });
+
+            // Sign Up form validation
+            signUpSubmitButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                const isNameEmpty = nameSignUpInput.value.trim() === '';
+                const emailValue = emailSignUpInput.value.trim();
+                const isEmailEmpty = emailValue === '';
+                const isPasswordEmpty = passwordSignUpInput.value.trim() === '';
+                const isValidDomain = emailValue.endsWith('@akgec.ac.in');
+
+                // Reset borders
+                nameSignUpInput.classList.remove('border-red-500');
+                emailSignUpInput.classList.remove('border-red-500');
+                passwordSignUpInput.classList.remove('border-red-500');
+
+                if (isNameEmpty || isEmailEmpty || isPasswordEmpty || !isValidDomain) {
+                    if (isNameEmpty || isEmailEmpty || isPasswordEmpty) {
+                        signUpErrorMessage.textContent = 'Please fill in all details.';
+                    } else if (!isValidDomain) {
+                        signUpErrorMessage.textContent = 'Please use your akgec.ac.in email address.';
+                    }
+                    signUpErrorMessage.classList.remove('invisible');
+                    isNameEmpty ? nameSignUpInput.classList.add('border-red-500') : nameSignUpInput.classList.remove('border-red-500');
+                    isEmailEmpty ? emailSignUpInput.classList.add('border-red-500') : emailSignUpInput.classList.remove('border-red-500');
+                    isPasswordEmpty ? passwordSignUpInput.classList.add('border-red-500') : passwordSignUpInput.classList.remove('border-red-500');
+                    if (!isEmailEmpty && !isValidDomain) emailSignUpInput.classList.add('border-red-500');
+                } else {
+                    signUpErrorMessage.classList.add('invisible');
+                    
+                    // Add fade-out class and redirect after animation
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 500); // 500ms matches the animation duration
+                }
+            });
+
+            // The "Create Account" button on the original form should also trigger the transition
+            const createAccountButton = document.getElementById('createAccountButton');
+            if(createAccountButton) createAccountButton.addEventListener('click', (e) => { e.preventDefault(); container.classList.add('sign-up-mode'); });
+
+        });
+    </script>
+</body>
+</html>

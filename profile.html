@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - CampusTrade</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- 3. Configure Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-50">
+
+    <!-- App Wrapper -->
+    <div class="min-h-screen flex flex-col">
+
+        <!-- Header (Copied from home.html for consistency) -->
+        <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-8">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-2xl text-gray-900 flex items-center">
+                                Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <div class="relative">
+                            <button id="notification-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View notifications</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                            </button>
+                            <!-- Notification Bubble (Increased Height) -->
+                            <div id="notification-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Notifications</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">You have no new notifications.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Wishlist Button -->
+                        <div class="relative">
+                            <button id="wishlist-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View wishlist</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                            </button>
+                            <!-- Wishlist Bubble -->
+                            <div id="wishlist-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Wishlist</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">Your wishlist is empty.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart Button -->
+                        <div class="relative">
+                            <button id="cart-button" class="p-3 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                <span class="sr-only">View cart</span>
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.841A1.125 1.125 0 0018.102 6H4.227l-.513-1.922A1.125 1.125 0 002.626 3H2.25z" /></svg>
+                            </button>
+                            <!-- Cart Bubble -->
+                            <div id="cart-bubble" class="hidden absolute right-0 mt-2 w-80 h-72 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Shopping Cart</h3>
+                                </div>
+                                <div class="p-6 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.841A1.125 1.125 0 0018.102 6H4.227l-.513-1.922A1.125 1.125 0 002.626 3H2.25z" /></svg>
+                                    <p class="mt-4 text-sm text-gray-600">Your cart is empty.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="profile.html" class="p-3 rounded-full text-gray-600 bg-gray-100 ring-2 ring-purple-500">
+                            <span class="sr-only">View profile</span>
+                            <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+            <!-- Profile Header -->
+            <section class="bg-white">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                        <!-- Profile Picture -->
+                        <div id="profile-avatar-btn" class="flex-shrink-0 relative cursor-pointer">
+                            <div class="h-32 w-32 rounded-full bg-purple-100 flex items-center justify-center ring-4 ring-purple-200 ring-offset-2">
+                                <svg id="current-avatar-svg" class="w-20 h-20 text-brand-purple" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15.75a7.486 7.486 0 015.855 2.062 8.217 8.217 0 01-11.71 0zM12 12.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- Profile Details -->
+                        <div class="flex-grow text-center md:text-left">
+                            <h1 class="text-4xl font-bold text-gray-900">Alex Thompson</h1>
+                            
+                            
+                            <!-- User Details Grid -->
+                            <div class="mt-6 grid grid-cols-[auto,1fr] gap-x-4 gap-y-4 text-lg text-gray-700">
+                                <!-- University -->
+                                <div class="font-semibold text-gray-500">University:</div>
+                                <div class="text-brand-purple font-medium">State University</div>
+                                <!-- Major -->
+                                <div class="font-semibold text-gray-500">Major:</div>
+                                <div>Computer Science</div>
+                                <!-- Email -->
+                                <div class="font-semibold text-gray-500">Email:</div>
+                                <div>alex.thompson@state.edu</div>
+                                <!-- Phone -->
+                                <div class="font-semibold text-gray-500">Phone:</div>
+                                <div>+1 (555) 123-4567</div>
+                            </div>
+                            
+                        </div>
+                        <!-- Edit Profile Button -->
+                        <div class="flex-shrink-0 relative">
+                            <button id="edit-profile-button" class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                Edit Profile
+                            </button>
+                            <!-- Edit Profile Bubble -->
+                            <div id="edit-profile-bubble" class="hidden absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                                <div class="p-4 border-b border-gray-200">
+                                    <h3 class="font-semibold text-gray-900">Edit Your Profile</h3>
+                                </div>
+                                <form class="p-6 space-y-4">
+                                    <div>
+                                        <label for="edit-name" class="text-sm font-medium text-gray-700">Full Name</label>
+                                        <input type="text" id="edit-name" value="Alex Thompson" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label for="edit-username" class="text-sm font-medium text-gray-700">Username</label>
+                                        <input type="text" id="edit-username" value="@alex_thompson" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label for="edit-major" class="text-sm font-medium text-gray-700">Major</label>
+                                        <input type="text" id="edit-major" value="Computer Science" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label for="edit-phone" class="text-sm font-medium text-gray-700">Phone</label>
+                                        <input type="text" id="edit-phone" value="+91" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                                    </div>
+                                    <div class="flex justify-end space-x-3 pt-2">
+                                        <button type="button" id="cancel-edit-button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-brand-purple rounded-lg hover:opacity-90">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabbed Section for Listed Items and Orders -->
+            <section class="py-16 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <!-- Tab Navigation -->
+                    <div class="mb-12 border-b border-gray-200">
+                        <div class="flex justify-center -mb-px space-x-6 sm:space-x-12">
+                            <button id="tab-listed-items" class="tab-button active-tab">
+                                Your Listed Items
+                            </button>
+                            <button id="tab-my-orders" class="tab-button">
+                                My Orders
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div>
+                        <!-- Your Listed Items Content -->
+                        <div id="content-listed-items" class="tab-content">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                <!-- Listed Item Card 1 -->
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                                    <img src="https://via.placeholder.com/300x200?text=Calculus+Book" alt="Calculus I Textbook" class="w-full h-48 object-cover">
+                                    <div class="p-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Calculus I Textbook</h3>
+                                        <p class="text-gray-600 text-sm mt-1">Used - Good Condition</p>
+                                        <p class="text-brand-purple font-bold mt-2">₹800</p>
+                                        <div class="mt-4 flex space-x-2">
+                                            <button class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium">Edit</button>
+                                            <button class="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Listed Item Card 2 -->
+                                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                                    <img src="https://via.placeholder.com/300x200?text=Desk+Lamp" alt="Desk Lamp" class="w-full h-48 object-cover">
+                                    <div class="p-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Modern Desk Lamp</h3>
+                                        <p class="text-gray-600 text-sm mt-1">Used - Excellent Condition</p>
+                                        <p class="text-brand-purple font-bold mt-2">₹700</p>
+                                        <div class="mt-4 flex space-x-2">
+                                            <button class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium">Edit</button>
+                                            <button class="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Empty State (Uncomment if no items are listed) -->
+                                <!--
+                                <div class="sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                    <h3 class="mt-2 text-lg font-medium text-gray-900">No items listed yet</h3>
+                                    <p class="mt-1 text-sm text-gray-500">When you list an item for sale, it will appear here.</p>
+                                    <div class="mt-6">
+                                        <a href="sell_item.html" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-pink">
+                                            List Your First Item
+                                        </a>
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+
+                        <!-- My Orders Content -->
+                        <div id="content-my-orders" class="tab-content hidden">
+                            <div class="space-y-8">
+                                <!-- Order Item 1 -->
+                                <div class="bg-white rounded-lg shadow-sm p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                                    <img src="https://via.placeholder.com/150x100?text=Python+Book" alt="Introduction to Python" class="w-full sm:w-32 h-32 sm:h-24 object-cover rounded-md">
+                                    <div class="flex-grow">
+                                        <h3 class="text-lg font-semibold text-gray-900">Introduction to Python</h3>
+                                        <p class="text-gray-600 text-sm mt-1">Order Date: Oct 15, 2023</p>
+                                        <p class="text-brand-purple font-bold mt-2">₹1200</p>
+                                    </div>
+                                    <div class="flex-shrink-0 w-full sm:w-auto">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                            Delivered
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Order Item 2 -->
+                                <div class="bg-white rounded-lg shadow-sm p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                                    <img src="https://via.placeholder.com/150x100?text=Headphones" alt="Headphones" class="w-full sm:w-32 h-32 sm:h-24 object-cover rounded-md">
+                                    <div class="flex-grow">
+                                        <h3 class="text-lg font-semibold text-gray-900">Noise-Cancelling Headphones</h3>
+                                        <p class="text-gray-600 text-sm mt-1">Order Date: Oct 18, 2023</p>
+                                        <p class="text-brand-purple font-bold mt-2">₹7000</p>
+                                    </div>
+                                    <div class="flex-shrink-0 w-full sm:w-auto">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                            Shipped
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Empty State (Uncomment if no orders) -->
+                                <!--
+                                <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+                                    <p class="text-gray-500">You haven't ordered anything yet.</p>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+
+            <!-- Logout Button Section -->
+            <section class="bg-gray-50 pt-0 pb-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+                    <!-- Back to Home Button -->
+                    <a href="home.html"
+                    class="inline-flex items-center px-6 py-3 rounded-xl border border-brand-purple text-brand-purple font-semibold hover:bg-brand-purple hover:text-white transition-all duration-300">
+                    ← Back to Home
+                    </a>
+
+                    <!-- Logout Button -->
+                    <div class="mt-4">
+                        <button id="logout-button" class="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-colors">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <style>
+            .tab-button {
+                padding: 1rem;
+                border-bottom: 3px solid transparent;
+                transition: all 0.3s ease-in-out;
+                font-size: 1.125rem; /* text-lg */
+                color: #6B7280; /* text-gray-500 */
+            }
+            .active-tab {
+                color: #6B21A8; /* brand-purple */
+                border-color: #6B21A8; /* brand-purple */
+                font-weight: 700; /* font-bold */
+                transform: scale(1.1);
+            }
+        </style>
+
+        <!-- Footer (Copied from home.html for consistency) -->
+        <footer class="bg-gray-900 text-gray-400">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div class="md:col-span-2">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                            <span class="font-poppins font-extrabold text-2xl text-white flex items-center">Campus<span class="font-cursive text-3xl ml-1">Trade</span></span>
+                        </a>
+                        <p class="mt-4 text-sm max-w-xs">The ultimate marketplace for college students to buy and sell everything they need.</p>
+                    </div>
+                    <div class="md:col-start-4">
+                        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Support</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Help Center</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Contact Us</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Report Issue</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-900 border-t border-gray-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+                    <p class="text-sm text-gray-500">&copy; 2024 CampusTrade. All rights reserved. Made with <span class="text-red-500">&hearts;</span> for students.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</body>
+<!-- Avatar Selection Modal -->
+<div id="avatar-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full relative">
+        <button id="close-avatar-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Choose Your Avatar</h3>
+
+        <div class="grid grid-cols-3 gap-4">
+            <!-- Avatar Option 1 (Default User) -->
+            <div class="avatar-option p-4 rounded-full bg-purple-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-brand-purple transition-all" data-avatar-path='<path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15.75a7.486 7.486 0 015.855 2.062 8.217 8.217 0 01-11.71 0zM12 12.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />' data-bg-color="purple-100" data-icon-color="brand-purple">
+                <svg class="w-16 h-16 text-brand-purple" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15.75a7.486 7.486 0 015.855 2.062 8.217 8.217 0 01-11.71 0zM12 12.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <!-- Avatar Option 2 (Book) -->
+            <div class="avatar-option p-4 rounded-full bg-blue-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all" data-avatar-path='<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" />' data-bg-color="blue-100" data-icon-color="blue-600">
+                <svg class="w-16 h-16 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" />
+                </svg>
+            </div>
+            <!-- Avatar Option 3 (Laptop) -->
+            <div class="avatar-option p-4 rounded-full bg-green-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-green-500 transition-all" data-avatar-path='<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-1.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />' data-bg-color="green-100" data-icon-color="green-600">
+                <svg class="w-16 h-16 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-1.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />
+                </svg>
+            </div>
+            <!-- Avatar Option 4 (Graduation Cap) -->
+            <div class="avatar-option p-4 rounded-full bg-yellow-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-yellow-500 transition-all" data-avatar-path='<path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0l-2.172 1.923A59.902 59.902 0 0012 15.543a59.902 59.902 0 0010.399-5.84l-2.172-1.923" />' data-bg-color="yellow-100" data-icon-color="yellow-600">
+                <svg class="w-16 h-16 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0l-2.172 1.923A59.902 59.902 0 0012 15.543a59.902 59.902 0 0010.399-5.84l-2.172-1.923" />
+                </svg>
+            </div>
+            <!-- Avatar Option 5 (Shopping Bag) -->
+            <div class="avatar-option p-4 rounded-full bg-red-100 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-red-500 transition-all" data-avatar-path='<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />' data-bg-color="red-100" data-icon-color="red-600">
+                <svg class="w-16 h-16 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+            </div>
+            <!-- Add more avatar options here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileAvatarBtn = document.getElementById('profile-avatar-btn');
+        const avatarModal = document.getElementById('avatar-modal');
+        const closeAvatarModal = document.getElementById('close-avatar-modal');
+        const currentAvatarSvg = document.getElementById('current-avatar-svg');
+        const currentAvatarContainer = profileAvatarBtn.querySelector('div');
+        const avatarOptions = document.querySelectorAll('.avatar-option');
+
+        // Show modal when avatar is clicked
+        profileAvatarBtn.addEventListener('click', () => {
+            avatarModal.classList.remove('hidden');
+        });
+
+        // Hide modal when close button is clicked
+        closeAvatarModal.addEventListener('click', () => {
+            avatarModal.classList.add('hidden');
+        });
+
+        // Handle avatar selection
+        avatarOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const newPath = option.dataset.avatarPath;
+                const newBgColorClass = option.dataset.bgColor; // Get bg color class from data attribute
+                const newIconColorClass = option.dataset.iconColor; // Get icon color class from data attribute
+
+                // Update main avatar SVG path
+                currentAvatarSvg.innerHTML = newPath;
+                
+                // Update main avatar background and icon color
+                // Remove existing bg- and text- classes and add new ones
+                currentAvatarContainer.className = currentAvatarContainer.className.replace(/bg-[\w-]+/, `bg-${newBgColorClass}`);
+                currentAvatarContainer.className = currentAvatarContainer.className.replace(/ring-[\w-]+/, `ring-${newBgColorClass.replace('100', '200')}`);
+                currentAvatarSvg.className = currentAvatarSvg.className.replace(/text-[\w-]+/, `text-${newIconColorClass}`);
+
+                avatarModal.classList.add('hidden'); // Hide modal after selection
+            });
+        });
+
+        // --- Tab Switching Logic ---
+        const tabButtons = {
+            listedItems: document.getElementById('tab-listed-items'),
+            myOrders: document.getElementById('tab-my-orders')
+        };
+        const tabContents = {
+            listedItems: document.getElementById('content-listed-items'),
+            myOrders: document.getElementById('content-my-orders')
+        };
+
+        function switchTab(activeTab) {
+            Object.keys(tabButtons).forEach(key => {
+                if (key === activeTab) {
+                    tabButtons[key].classList.add('active-tab');
+                    tabContents[key].classList.remove('hidden');
+                } else {
+                    tabButtons[key].classList.remove('active-tab');
+                    tabContents[key].classList.add('hidden');
+                }
+            });
+        }
+
+        tabButtons.listedItems.addEventListener('click', () => switchTab('listedItems'));
+        tabButtons.myOrders.addEventListener('click', () => switchTab('myOrders'));
+
+        // Initialize with the first tab active
+        switchTab('listedItems');
+
+        // --- Centralized Bubble Toggling Logic ---
+        const bubblesConfig = [
+            { buttonId: 'notification-button', bubbleId: 'notification-bubble' },
+            { buttonId: 'wishlist-button', bubbleId: 'wishlist-bubble' },
+            { buttonId: 'cart-button', bubbleId: 'cart-bubble' },
+            { buttonId: 'edit-profile-button', bubbleId: 'edit-profile-bubble' }
+        ];
+
+        bubblesConfig.forEach(config => {
+            const button = document.getElementById(config.buttonId);
+            const bubble = document.getElementById(config.bubbleId);
+
+            if (button && bubble) {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent click from bubbling to document
+
+                    // Hide all other bubbles
+                    bubblesConfig.forEach(otherConfig => {
+                        if (otherConfig.bubbleId !== config.bubbleId) {
+                            document.getElementById(otherConfig.bubbleId)?.classList.add('hidden');
+                        }
+                    });
+                    // Toggle the current bubble
+                    bubble.classList.toggle('hidden');
+                });
+            }
+        });
+
+        // Specific logic for edit profile cancel button
+        const cancelEditButton = document.getElementById('cancel-edit-button');
+        if(cancelEditButton) {
+            cancelEditButton.addEventListener('click', () => {
+                document.getElementById('edit-profile-bubble').classList.add('hidden');
+            });
+        }
+        // Close all bubbles when clicking anywhere on the document outside of a bubble or its button
+        document.addEventListener('click', function(event) {
+            bubblesConfig.forEach(config => {
+                const button = document.getElementById(config.buttonId);
+                const bubble = document.getElementById(config.bubbleId);
+                // Only hide if the click was NOT on the button AND NOT inside the bubble
+                if (bubble && !bubble.classList.contains('hidden') && !(button?.contains(event.target) || bubble?.contains(event.target))) {
+                    bubble.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- Logout Button Logic ---
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+        }
+    });
+</script>
+
+</html>

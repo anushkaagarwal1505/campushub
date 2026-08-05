@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - CampusTrade</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- 3. Configure Tailwind to use Inter font and brand colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-100">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+            <div class="text-center">
+                <a href="home.html" class="flex items-center justify-center space-x-2">
+                    <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    <span class="font-poppins font-extrabold text-2xl text-gray-900 flex items-center">
+                        Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                    </span>
+                </a>
+                <h2 class="mt-6 text-3xl font-bold text-gray-900">Check Your Email</h2>
+                <p class="mt-2 text-gray-600">We've sent a 6-digit code to your email address. Please enter it below.</p>
+            </div>
+            
+            <form id="otp-form" class="space-y-6">
+                <div>
+                    <label for="otp" class="text-sm font-medium text-gray-700">One-Time Password (OTP)</label>
+                    <input id="otp" name="otp" type="text" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm" placeholder="Enter 6-digit code">
+                </div>
+
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple hover:opacity-90 transition-opacity">Verify Code</button>
+                </div>
+            </form>
+            <div class="mt-4 flex justify-center">
+                <a href="forgot-password.html"
+                class="inline-flex items-center px-6 py-3 rounded-xl border border-brand-purple text-brand-purple font-semibold hover:bg-brand-purple hover:text-white transition-all duration-300">
+                ← Go Back
+                </a>
+            </div>
+
+            <div class="text-center">
+                <a href="index.html" class="text-sm font-medium text-brand-purple hover:text-brand-pink">Back to Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('otp-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const otpInput = document.getElementById('otp');
+            const otpValue = otpInput.value.trim();
+
+            // Basic validation for prototype
+            if (otpValue.length === 6 && !isNaN(otpValue)) {
+                // In a real app, you'd verify the OTP against the backend.
+                // For now, we'll just proceed to the next step.
+                window.location.href = 'create-new-password.html';
+            } else {
+                alert('Please enter a valid 6-digit OTP.');
+                otpInput.classList.add('border-red-500');
+            }
+        });
+    </script>
+
+</body>
+</html>

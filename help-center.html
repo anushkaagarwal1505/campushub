@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - CampusTrade</title>
+    
+    <!-- Tailwind CSS, Google Fonts, and Dark Mode Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
+
+    <!-- App Wrapper -->
+    <div class="min-h-screen flex flex-col">
+
+        <!-- Header (Copied for consistency) -->
+        <header class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-8">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-2xl text-gray-900 dark:text-white flex items-center">
+                                Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                            </span>
+                        </a>
+                    </div>
+                    <!-- Icons can be added here if needed -->
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+            <!-- Hero Section -->
+            <section class="bg-purple-50 dark:bg-gray-800 py-16 md:py-24">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">Help Center</h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">How can we help you today?</p>
+                    <div class="mt-8 max-w-xl mx-auto">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="search" name="search" id="search" class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-brand-purple focus:border-brand-purple sm:text-sm" placeholder="Search for articles...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Topics Section -->
+            <section class="py-16 md:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-12">Browse by Topic</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Topic Card 1 -->
+                        <a href="#" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-xl text-brand-purple">Getting Started</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">Learn how to create an account and set up your profile.</p>
+                        </a>
+                        <!-- Topic Card 2 -->
+                        <a href="#" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-xl text-brand-purple">Buying & Selling</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">Find out how to list items, make purchases, and manage orders.</p>
+                        </a>
+                        <!-- Topic Card 3 -->
+                        <a href="#" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-xl text-brand-purple">Account & Profile</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">Manage your account settings, password, and notifications.</p>
+                        </a>
+                        <!-- Topic Card 4 -->
+                        <a href="#" class="block p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+                            <h3 class="font-semibold text-xl text-brand-purple">Safety & Trust</h3>
+                            <p class="mt-2 text-gray-600 dark:text-gray-400">Tips for safe trading and how to report issues.</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-12">Frequently Asked Questions</h2>
+                    <div class="space-y-4">
+                        <!-- FAQ Item 1 -->
+                        <div class="faq-item bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6">
+                                <span class="font-semibold text-lg text-gray-900 dark:text-white">How do I sell an item?</span>
+                                <svg class="faq-arrow w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-300">
+                                <p>To sell an item, click the "Sell Your Items" button on the homepage, fill out the form with your item's details, upload some photos, and set your price. Once submitted, your listing will be visible to other students.</p>
+                            </div>
+                        </div>
+                        <!-- FAQ Item 2 -->
+                        <div class="faq-item bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6">
+                                <span class="font-semibold text-lg text-gray-900 dark:text-white">Is CampusTrade safe to use?</span>
+                                <svg class="faq-arrow w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-300">
+                                <p>Yes! We prioritize safety by requiring all users to verify their identity with a valid college email address. We also recommend meeting in public, well-lit areas on campus for exchanges.</p>
+                            </div>
+                        </div>
+                        <!-- FAQ Item 3 -->
+                        <div class="faq-item bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                            <button class="faq-question w-full flex justify-between items-center text-left p-6">
+                                <span class="font-semibold text-lg text-gray-900 dark:text-white">How does payment work?</span>
+                                <svg class="faq-arrow w-6 h-6 text-gray-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="faq-answer hidden p-6 pt-0 text-gray-600 dark:text-gray-300">
+                                <p>Payments are handled directly between the buyer and seller. You can use cash, or popular payment apps like Venmo, PayPal, or Google Pay. Always confirm the payment method with the other party beforehand.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="mt-8 flex justify-center">
+                <a href="home.html"
+                class="inline-flex items-center px-6 py-3 rounded-xl border border-brand-purple text-brand-purple font-semibold hover:bg-brand-purple hover:text-white transition-all duration-300">
+                ← Back to Home
+                </a>
+            </div>
+        </main>
+
+        <!-- Footer (Copied for consistency) -->
+        <footer class="bg-gray-900 text-gray-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div class="md:col-span-2">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                            <span class="font-poppins font-extrabold text-2xl text-white flex items-center">Campus<span class="font-cursive text-3xl ml-1">Trade</span></span>
+                        </a>
+                        <p class="mt-4 text-sm max-w-xs text-gray-400">The ultimate marketplace for college students to buy and sell everything they need.</p>
+                    </div>
+                    <div class="md:col-start-4">
+                        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Support</h3>
+                        <ul class="mt-4 space-y-3 text-gray-400">
+                            <li><a href="help-center.html" class="text-base hover:text-white">Help Center</a></li>
+                            <li><a href="contact.html" class="text-base hover:text-white">Contact Us</a></li>
+                            <li><a href="report-issue.html" class="text-base hover:text-white">Report Issue</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-900 border-t border-gray-700">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+                    <p class="text-sm text-gray-400">&copy; 2024 CampusTrade. All rights reserved. Made with <span class="text-red-500">&hearts;</span> for students.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FAQ Accordion Logic
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const arrow = item.querySelector('.faq-arrow');
+
+                question.addEventListener('click', () => {
+                    const isVisible = !answer.classList.contains('hidden');
+
+                    // Close all other answers
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.querySelector('.faq-answer').classList.add('hidden');
+                            otherItem.querySelector('.faq-arrow').classList.remove('rotate-180');
+                        }
+                    });
+
+                    // Toggle current answer
+                    answer.classList.toggle('hidden');
+                    arrow.classList.toggle('rotate-180');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

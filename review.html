@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave a Review - CampusTrade</title>
+    
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Load Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- 3. Configure Tailwind to use Inter font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-purple': '#6B21A8',
+                        'brand-pink': '#DF3B9F',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans antialiased text-gray-900 bg-gray-50">
+
+    <!-- App Wrapper -->
+    <div class="min-h-screen flex flex-col">
+
+        <!-- Header (Copied from home.html for consistency) -->
+        <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center space-x-8">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-brand-purple" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span class="font-poppins font-extrabold text-2xl text-gray-900 flex items-center">
+                                Campus<span class="font-cursive text-3xl ml-1">Trade</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow">
+            <section class="py-16 md:py-24">
+                <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold text-gray-900 text-center">Leave a Review</h1>
+                    <p class="mt-4 text-lg text-gray-600 text-center">Share your experience with CampusTrade!</p>
+
+                    <form class="mt-8 space-y-6">
+                        <div>
+                            <label for="rating" class="block text-center text-lg font-medium text-gray-700">Rating</label>
+                            <div class="mt-2 flex items-center justify-center space-x-1" id="star-rating-container">
+                                <!-- Star Icons -->
+                                <svg class="star-icon h-10 w-10 text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" data-rating="1"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151L12 .587z"/></svg>
+                                <svg class="star-icon h-10 w-10 text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" data-rating="2"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151L12 .587z"/></svg>
+                                <svg class="star-icon h-10 w-10 text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" data-rating="3"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151L12 .587z"/></svg>
+                                <svg class="star-icon h-10 w-10 text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" data-rating="4"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151L12 .587z"/></svg>
+                                <svg class="star-icon h-10 w-10 text-gray-300 cursor-pointer hover:text-yellow-400 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24" data-rating="5"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 18.896l-7.416 3.817 1.48-8.279L.001 9.306l8.332-1.151L12 .587z"/></svg>
+                                <!-- Hidden input to store the selected rating -->
+                                <input type="hidden" id="selected-rating" name="rating" value="0">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="comment" class="block text-sm font-medium text-gray-700">Comment</label>
+                            <div class="mt-1">
+                                <textarea id="comment" name="comment" rows="4" class="shadow-sm focus:ring-brand-purple focus:border-brand-purple block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple hover:opacity-90 transition-opacity">
+                                Submit Review
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-8 flex justify-center">
+                        <a href="home.html"
+                        class="inline-flex items-center px-6 py-3 rounded-xl border border-brand-purple text-brand-purple font-semibold hover:bg-brand-purple hover:text-white transition-all duration-300">
+                        ← Back to Home
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer (Copied from home.html for consistency) -->
+        <footer class="bg-gray-900 text-gray-400">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div class="md:col-span-2">
+                        <a href="home.html" class="flex items-center space-x-2">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                            <span class="font-poppins font-extrabold text-2xl text-white flex items-center">Campus<span class="font-cursive text-3xl ml-1">Trade</span></span>
+                        </a>
+                        <p class="mt-4 text-sm max-w-xs">The ultimate marketplace for college students to buy and sell everything they need.</p>
+                    </div>
+                    <div class="md:col-start-4">
+                        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">Support</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Help Center</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Contact Us</a></li>
+                            <li><a href="#" class="text-base text-gray-400 hover:text-white">Report Issue</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-900 border-t border-gray-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+                    <p class="text-sm text-gray-500">&copy; 2024 CampusTrade. All rights reserved. Made with <span class="text-red-500">&hearts;</span> for students.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle (copied from other pages for consistency)
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Star Rating Logic
+            const starContainer = document.getElementById('star-rating-container');
+            const starIcons = starContainer.querySelectorAll('.star-icon');
+            const selectedRatingInput = document.getElementById('selected-rating');
+            let currentRating = 0; // To store the rating selected by click
+
+            function highlightStars(rating) {
+                starIcons.forEach(star => {
+                    if (parseInt(star.dataset.rating) <= rating) {
+                        star.classList.remove('text-gray-300');
+                        star.classList.add('text-yellow-400');
+                    } else {
+                        star.classList.remove('text-yellow-400');
+                        star.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            starIcons.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    highlightStars(parseInt(this.dataset.rating));
+                });
+
+                star.addEventListener('click', function() {
+                    currentRating = parseInt(this.dataset.rating);
+                    selectedRatingInput.value = currentRating; // Update hidden input value
+                    highlightStars(currentRating); // Keep selected stars highlighted
+                });
+            });
+
+            starContainer.addEventListener('mouseout', function() {
+                highlightStars(currentRating); // Revert to clicked rating on mouseout
+            });
+        });
+    </script>
+</body>
+</html>
