@@ -194,105 +194,154 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const signUpButton = document.getElementById('sign-up-btn');
-            const signInButtonPanel = document.getElementById('sign-in-btn');
-            const container = document.getElementById('container');
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        const signUpButton = document.getElementById('sign-up-btn');
+        const signInButtonPanel = document.getElementById('sign-in-btn');
+        const container = document.getElementById('container');
 
-            const signInButton = document.getElementById('signInButton');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const errorMessage = document.getElementById('errorMessage');
+        const signInButton = document.getElementById('signInButton');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
 
-            const signUpSubmitButton = document.getElementById('signUpSubmitButton');
-            const nameSignUpInput = document.getElementById('name-signup');
-            const emailSignUpInput = document.getElementById('email-signup');
-            const passwordSignUpInput = document.getElementById('password-signup');
-            const signUpErrorMessage = document.getElementById('signUpErrorMessage');
+        const signUpSubmitButton = document.getElementById('signUpSubmitButton');
+        const nameSignUpInput = document.getElementById('name-signup');
+        const emailSignUpInput = document.getElementById('email-signup');
+        const passwordSignUpInput = document.getElementById('password-signup');
+        const signUpErrorMessage = document.getElementById('signUpErrorMessage');
 
-            // Toggle to Sign Up Mode
-            signUpButton.addEventListener('click', () => {
-                container.classList.add('sign-up-mode');
-            });
-
-            // Toggle back to Sign In Mode
-            signInButtonPanel.addEventListener('click', () => {
-                container.classList.remove('sign-up-mode');
-            });
-
-            // Existing Sign In form validation
-            signInButton.addEventListener('click', function(event) {
-                event.preventDefault();
-                const emailValue = emailInput.value.trim();
-                const passwordValue = passwordInput.value.trim();
-                const isValidDomain = emailValue.endsWith('@akgec.ac.in');
-
-                // Reset borders
-                emailInput.classList.remove('border-red-500');
-                passwordInput.classList.remove('border-red-500');
-
-                if (emailValue === '' || passwordValue === '') {
-                    errorMessage.textContent = 'Please enter your email and password.';
-                    errorMessage.classList.remove('invisible');
-                    if (emailValue === '') emailInput.classList.add('border-red-500');
-                    if (passwordValue === '') passwordInput.classList.add('border-red-500');
-                } else if (!isValidDomain) {
-                    errorMessage.textContent = 'Please use your akgec.ac.in email address.';
-                    errorMessage.classList.remove('invisible');
-                    emailInput.classList.add('border-red-500');
-                } else {
-                    errorMessage.classList.add('invisible');
-                    
-                    // Add fade-out class and redirect after animation
-                    document.body.classList.add('page-exit');
-                    setTimeout(() => {
-                        window.location.href = 'home.html';
-                    }, 500); // 500ms matches the animation duration
-                }
-            });
-
-            // Sign Up form validation
-            signUpSubmitButton.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                const isNameEmpty = nameSignUpInput.value.trim() === '';
-                const emailValue = emailSignUpInput.value.trim();
-                const isEmailEmpty = emailValue === '';
-                const isPasswordEmpty = passwordSignUpInput.value.trim() === '';
-                const isValidDomain = emailValue.endsWith('@akgec.ac.in');
-
-                // Reset borders
-                nameSignUpInput.classList.remove('border-red-500');
-                emailSignUpInput.classList.remove('border-red-500');
-                passwordSignUpInput.classList.remove('border-red-500');
-
-                if (isNameEmpty || isEmailEmpty || isPasswordEmpty || !isValidDomain) {
-                    if (isNameEmpty || isEmailEmpty || isPasswordEmpty) {
-                        signUpErrorMessage.textContent = 'Please fill in all details.';
-                    } else if (!isValidDomain) {
-                        signUpErrorMessage.textContent = 'Please use your akgec.ac.in email address.';
-                    }
-                    signUpErrorMessage.classList.remove('invisible');
-                    isNameEmpty ? nameSignUpInput.classList.add('border-red-500') : nameSignUpInput.classList.remove('border-red-500');
-                    isEmailEmpty ? emailSignUpInput.classList.add('border-red-500') : emailSignUpInput.classList.remove('border-red-500');
-                    isPasswordEmpty ? passwordSignUpInput.classList.add('border-red-500') : passwordSignUpInput.classList.remove('border-red-500');
-                    if (!isEmailEmpty && !isValidDomain) emailSignUpInput.classList.add('border-red-500');
-                } else {
-                    signUpErrorMessage.classList.add('invisible');
-                    
-                    // Add fade-out class and redirect after animation
-                    document.body.classList.add('page-exit');
-                    setTimeout(() => {
-                        window.location.href = 'home.html';
-                    }, 500); // 500ms matches the animation duration
-                }
-            });
-
-            // The "Create Account" button on the original form should also trigger the transition
-            const createAccountButton = document.getElementById('createAccountButton');
-            if(createAccountButton) createAccountButton.addEventListener('click', (e) => { e.preventDefault(); container.classList.add('sign-up-mode'); });
-
+        // Toggle to Sign Up Mode
+        signUpButton.addEventListener('click', () => {
+            container.classList.add('sign-up-mode');
         });
+
+        // Toggle back to Sign In Mode
+        signInButtonPanel.addEventListener('click', () => {
+            container.classList.remove('sign-up-mode');
+        });
+
+        // REAL Sign In using Supabase
+        signInButton.addEventListener('click', async function(event) {
+            event.preventDefault();
+            const emailValue = emailInput.value.trim();
+            const passwordValue = passwordInput.value.trim();
+            const isValidDomain = emailValue.endsWith('@akgec.ac.in');
+
+            emailInput.classList.remove('border-red-500');
+            passwordInput.classList.remove('border-red-500');
+
+            if (emailValue === '' || passwordValue === '') {
+                errorMessage.textContent = 'Please enter your email and password.';
+                errorMessage.classList.remove('invisible');
+                if (emailValue === '') emailInput.classList.add('border-red-500');
+                if (passwordValue === '') passwordInput.classList.add('border-red-500');
+                return;
+            }
+            if (!isValidDomain) {
+                errorMessage.textContent = 'Please use your akgec.ac.in email address.';
+                errorMessage.classList.remove('invisible');
+                emailInput.classList.add('border-red-500');
+                return;
+            }
+
+            errorMessage.classList.add('invisible');
+            signInButton.disabled = true;
+            signInButton.textContent = 'Signing in...';
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: emailValue,
+                password: passwordValue
+            });
+
+            signInButton.disabled = false;
+            signInButton.textContent = 'Sign In';
+
+            if (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('invisible');
+                return;
+            }
+
+            document.body.classList.add('page-exit');
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 500);
+        });
+
+        // REAL Sign Up using Supabase
+        signUpSubmitButton.addEventListener('click', async function(event) {
+            event.preventDefault();
+
+            const nameValue = nameSignUpInput.value.trim();
+            const emailValue = emailSignUpInput.value.trim();
+            const passwordValue = passwordSignUpInput.value.trim();
+            const isValidDomain = emailValue.endsWith('@akgec.ac.in');
+
+            nameSignUpInput.classList.remove('border-red-500');
+            emailSignUpInput.classList.remove('border-red-500');
+            passwordSignUpInput.classList.remove('border-red-500');
+
+            if (nameValue === '' || emailValue === '' || passwordValue === '') {
+                signUpErrorMessage.textContent = 'Please fill in all details.';
+                signUpErrorMessage.classList.remove('invisible');
+                if (nameValue === '') nameSignUpInput.classList.add('border-red-500');
+                if (emailValue === '') emailSignUpInput.classList.add('border-red-500');
+                if (passwordValue === '') passwordSignUpInput.classList.add('border-red-500');
+                return;
+            }
+            if (!isValidDomain) {
+                signUpErrorMessage.textContent = 'Please use your akgec.ac.in email address.';
+                signUpErrorMessage.classList.remove('invisible');
+                emailSignUpInput.classList.add('border-red-500');
+                return;
+            }
+            if (passwordValue.length < 6) {
+                signUpErrorMessage.textContent = 'Password must be at least 6 characters.';
+                signUpErrorMessage.classList.remove('invisible');
+                passwordSignUpInput.classList.add('border-red-500');
+                return;
+            }
+
+            signUpErrorMessage.classList.add('invisible');
+            signUpSubmitButton.disabled = true;
+            signUpSubmitButton.textContent = 'Creating account...';
+
+            const { data, error } = await supabase.auth.signUp({
+                email: emailValue,
+                password: passwordValue,
+                options: {
+                    data: { full_name: nameValue }
+                }
+            });
+
+            signUpSubmitButton.disabled = false;
+            signUpSubmitButton.textContent = 'Sign Up';
+
+            if (error) {
+                signUpErrorMessage.textContent = error.message;
+                signUpErrorMessage.classList.remove('invisible');
+                return;
+            }
+
+            // Also save into our profiles table
+            if (data.user) {
+                await supabase.from('profiles').insert({
+                    id: data.user.id,
+                    full_name: nameValue,
+                    email: emailValue
+                });
+            }
+
+            document.body.classList.add('page-exit');
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 500);
+        });
+
+        const createAccountButton = document.getElementById('createAccountButton');
+        if (createAccountButton) createAccountButton.addEventListener('click', (e) => { e.preventDefault(); container.classList.add('sign-up-mode'); });
+    });
     </script>
 </body>
 </html>
