@@ -249,9 +249,9 @@
             signInButton.disabled = true;
             signInButton.textContent = 'Signing in...';
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: emailValue,
-                password: passwordValue
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: emailValue,
+            password: passwordValue
             });
 
             signInButton.disabled = false;
@@ -307,7 +307,7 @@
             signUpSubmitButton.disabled = true;
             signUpSubmitButton.textContent = 'Creating account...';
 
-            const { data, error } = await supabase.auth.signUp({
+            const { data, error } = await supabaseClient.auth.signUp({
                 email: emailValue,
                 password: passwordValue,
                 options: {
@@ -326,7 +326,7 @@
 
             // Also save into our profiles table
             if (data.user) {
-                await supabase.from('profiles').insert({
+                await supabaseClient.from('profiles').insert({
                     id: data.user.id,
                     full_name: nameValue,
                     email: emailValue
