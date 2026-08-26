@@ -31,6 +31,8 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
 </head>
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
 
@@ -204,33 +206,7 @@
                     <div>
                         <!-- Your Listed Items Content -->
                         <div id="content-listed-items" class="tab-content">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                                <!-- Listed Item Card 1 -->
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
-                                    <img src="https://via.placeholder.com/300x200?text=Calculus+Book" alt="Calculus I Textbook" class="w-full h-48 object-cover">
-                                    <div class="p-4">
-                                        <h3 class="text-lg font-semibold text-gray-900">Calculus I Textbook</h3>
-                                        <p class="text-gray-600 text-sm mt-1">Used - Good Condition</p>
-                                        <p class="text-brand-purple font-bold mt-2">₹800</p>
-                                        <div class="mt-4 flex space-x-2">
-                                            <button class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium">Edit</button>
-                                            <button class="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">Remove</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Listed Item Card 2 -->
-                                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
-                                    <img src="https://via.placeholder.com/300x200?text=Desk+Lamp" alt="Desk Lamp" class="w-full h-48 object-cover">
-                                    <div class="p-4">
-                                        <h3 class="text-lg font-semibold text-gray-900">Modern Desk Lamp</h3>
-                                        <p class="text-gray-600 text-sm mt-1">Used - Excellent Condition</p>
-                                        <p class="text-brand-purple font-bold mt-2">₹700</p>
-                                        <div class="mt-4 flex space-x-2">
-                                            <button class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium">Edit</button>
-                                            <button class="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">Remove</button>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div id="listed-items-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
                                 <!-- Empty State (Uncomment if no items are listed) -->
                                 <!--
                                 <div class="sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12">
@@ -402,7 +378,109 @@
         </div>
     </div>
 </div>
+<script>
+    (async function() {
+        // 1. Check if user is logged in
+        const { data: { session } } = await supabaseClient.auth.getSession();
 
+        if (!session) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const userId = session.user.id;
+
+        // 2. Load and display real profile info
+        const { data: profile, error: profileError } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if (profile) {
+            document.querySelector('h1.text-4xl').textContent = profile.full_name || 'CampusTrade User';
+            const emailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
+            // Email is the 6th element in that details grid (index 5)
+            if (emailDivs[5]) emailDivs[5].textContent = profile.email || session.user.email;
+
+            // Pre-fill the edit form too
+            const editName = document.getElementById('edit-name');
+            if (editName) editName.value = profile.full_name || '';
+        }
+
+        // 3. Load this user's real listings
+        const { data: listings, error: listingsError } = await supabaseClient
+            .from('listings')
+            .select('*')
+            .eq('seller_id', userId)
+            .order('created_at', { ascending: false });
+
+        const grid = document.getElementById('listed-items-grid');
+
+        if (listings && listings.length > 0) {
+            grid.innerHTML = listings.map(item => `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                    <img src="${item.image_url || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${item.title}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900">${item.title}</h3>
+                        <p class="text-gray-600 text-sm mt-1">${item.category || ''}</p>
+                        <p class="text-brand-purple font-bold mt-2">₹${item.price}</p>
+                        <div class="mt-4 flex space-x-2">
+                            <button class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium">Edit</button>
+                            <button data-id="${item.id}" class="delete-listing-btn w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors text-sm font-medium">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Wire up Remove buttons
+            document.querySelectorAll('.delete-listing-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const listingId = this.dataset.id;
+                    if (confirm('Remove this listing?')) {
+                        await supabaseClient.from('listings').delete().eq('id', listingId);
+                        this.closest('.bg-white').remove();
+                    }
+                });
+            });
+        } else {
+            grid.innerHTML = `
+                <div class="sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12">
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">No items listed yet</h3>
+                    <p class="mt-1 text-sm text-gray-500">When you list an item for sale, it will appear here.</p>
+                    <div class="mt-6">
+                        <a href="sell_item.html" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-pink">
+                            List Your First Item
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 4. Real save-changes for edit profile form
+        const editForm = document.querySelector('#edit-profile-bubble form');
+        if (editForm) {
+            editForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const newName = document.getElementById('edit-name').value.trim();
+
+                const { error } = await supabaseClient
+                    .from('profiles')
+                    .update({ full_name: newName })
+                    .eq('id', userId);
+
+                if (error) {
+                    alert('Error saving: ' + error.message);
+                    return;
+                }
+
+                document.querySelector('h1.text-4xl').textContent = newName;
+                document.getElementById('edit-profile-bubble').classList.add('hidden');
+                alert('Profile updated!');
+            });
+        }
+    })();
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const profileAvatarBtn = document.getElementById('profile-avatar-btn');
@@ -520,7 +598,8 @@
         // --- Logout Button Logic ---
         const logoutButton = document.getElementById('logout-button');
         if (logoutButton) {
-            logoutButton.addEventListener('click', function() {
+            logoutButton.addEventListener('click', async function() {
+                await supabaseClient.auth.signOut();
                 window.location.href = 'index.html';
             });
         }
