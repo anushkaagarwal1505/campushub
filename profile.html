@@ -130,6 +130,7 @@
                         <!-- Profile Details -->
                         <div class="flex-grow text-center md:text-left">
                             <h1 class="text-4xl font-bold text-gray-900">Alex Thompson</h1>
+                            <p id="profile-username" class="text-gray-500 text-sm mt-1">@username</p>
                             
                             
                             <!-- User Details Grid -->
@@ -401,6 +402,8 @@
 
         if (profile) {
             document.querySelector('h1.text-4xl').textContent = profile.full_name || 'CampusTrade User';
+            const usernameEl = document.getElementById('profile-username');
+            if (usernameEl) usernameEl.textContent = profile.username ? '@' + profile.username : '@username';
 
             const detailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
             // Order in the grid is: University, Major, Email, Phone
@@ -497,6 +500,8 @@
                 }
 
                 document.querySelector('h1.text-4xl').textContent = newName;
+                const usernameElUpdate = document.getElementById('profile-username');
+                if (usernameElUpdate) usernameElUpdate.textContent = newUsername ? '@' + newUsername : '@username';
                 const detailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
                 if (detailDivs[1]) detailDivs[1].textContent = newUniversity || 'Not set';
                 if (detailDivs[3]) detailDivs[3].textContent = newMajor || 'Not set';
