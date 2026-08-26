@@ -169,6 +169,10 @@
                                         <input type="text" id="edit-username" value="@alex_thompson" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
                                     </div>
                                     <div>
+                                        <label for="edit-university" class="text-sm font-medium text-gray-700">University</label>
+                                        <input type="text" id="edit-university" value="" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
+                                    </div>
+                                    <div>
                                         <label for="edit-major" class="text-sm font-medium text-gray-700">Major</label>
                                         <input type="text" id="edit-major" value="Computer Science" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-purple focus:border-brand-purple sm:text-sm">
                                     </div>
@@ -380,7 +384,6 @@
 </div>
 <script>
     (async function() {
-        // 1. Check if user is logged in
         const { data: { session } } = await supabaseClient.auth.getSession();
 
         if (!session) {
@@ -390,7 +393,6 @@
 
         const userId = session.user.id;
 
-        // 2. Load and display real profile info
         const { data: profile, error: profileError } = await supabaseClient
             .from('profiles')
             .select('*')
@@ -399,17 +401,28 @@
 
         if (profile) {
             document.querySelector('h1.text-4xl').textContent = profile.full_name || 'CampusTrade User';
-            const emailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
-            // Email is the 6th element in that details grid (index 5)
-            if (emailDivs[5]) emailDivs[5].textContent = profile.email || session.user.email;
 
-            // Pre-fill the edit form too
+            const detailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
+            // Order in the grid is: University, Major, Email, Phone
+            if (detailDivs[1]) detailDivs[1].textContent = profile.university || 'Not set';
+            if (detailDivs[3]) detailDivs[3].textContent = profile.major || 'Not set';
+            if (detailDivs[5]) detailDivs[5].textContent = profile.email || session.user.email;
+            if (detailDivs[7]) detailDivs[7].textContent = profile.phone || 'Not set';
+
             const editName = document.getElementById('edit-name');
+            const editUniversity = document.getElementById('edit-university');
+            const editUsername = document.getElementById('edit-username');
+            const editMajor = document.getElementById('edit-major');
+            const editPhone = document.getElementById('edit-phone');
+
             if (editName) editName.value = profile.full_name || '';
+            if (editUniversity) editUniversity.value = profile.university || '';
+            if (editUsername) editUsername.value = profile.username || '';
+            if (editMajor) editMajor.value = profile.major || '';
+            if (editPhone) editPhone.value = profile.phone || '';
         }
 
-        // 3. Load this user's real listings
-        const { data: listings, error: listingsError } = await supabaseClient
+        const { data: listings } = await supabaseClient
             .from('listings')
             .select('*')
             .eq('seller_id', userId)
@@ -433,7 +446,6 @@
                 </div>
             `).join('');
 
-            // Wire up Remove buttons
             document.querySelectorAll('.delete-listing-btn').forEach(btn => {
                 btn.addEventListener('click', async function() {
                     const listingId = this.dataset.id;
@@ -457,16 +469,26 @@
             `;
         }
 
-        // 4. Real save-changes for edit profile form
         const editForm = document.querySelector('#edit-profile-bubble form');
         if (editForm) {
             editForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
+
                 const newName = document.getElementById('edit-name').value.trim();
+                const newUniversity = document.getElementById('edit-university').value.trim();
+                const newUsername = document.getElementById('edit-username').value.trim();
+                const newMajor = document.getElementById('edit-major').value.trim();
+                const newPhone = document.getElementById('edit-phone').value.trim();
 
                 const { error } = await supabaseClient
                     .from('profiles')
-                    .update({ full_name: newName })
+                    .update({
+                        full_name: newName,
+                        university: newUniversity,
+                        username: newUsername,
+                        major: newMajor,
+                        phone: newPhone
+                    })
                     .eq('id', userId);
 
                 if (error) {
@@ -475,6 +497,11 @@
                 }
 
                 document.querySelector('h1.text-4xl').textContent = newName;
+                const detailDivs = document.querySelectorAll('.grid.grid-cols-\\[auto\\,1fr\\] > div');
+                if (detailDivs[1]) detailDivs[1].textContent = newUniversity || 'Not set';
+                if (detailDivs[3]) detailDivs[3].textContent = newMajor || 'Not set';
+                if (detailDivs[7]) detailDivs[7].textContent = newPhone || 'Not set';
+
                 document.getElementById('edit-profile-bubble').classList.add('hidden');
                 alert('Profile updated!');
             });
@@ -605,5 +632,4 @@
         }
     });
 </script>
-
 </html>
