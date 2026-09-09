@@ -31,6 +31,8 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
 </head>
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
 
@@ -148,47 +150,7 @@
             <section class="py-16 md:py-24">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <h2 class="text-3xl font-bold text-gray-900 mb-8">Available Sports & Fitness Items</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        <!-- Placeholder Item Card 1 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="https://via.placeholder.com/300x200?text=Dumbbells" alt="Dumbbells" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Adjustable Dumbbells</h3>
-                                <p class="text-gray-600 text-sm mt-1">Used - Good Condition</p>
-                                <p class="text-brand-purple font-bold mt-2">₹3000</p>
-                                <button class="mt-4 w-full bg-brand-purple text-white py-2 px-4 rounded-md hover:bg-brand-pink transition-colors">Add to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Placeholder Item Card 2 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="https://via.placeholder.com/300x200?text=Yoga+Mat" alt="Yoga Mat" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Premium Yoga Mat</h3>
-                                <p class="text-gray-600 text-sm mt-1">Like New</p>
-                                <p class="text-brand-purple font-bold mt-2">₹800</p>
-                                <button class="mt-4 w-full bg-brand-purple text-white py-2 px-4 rounded-md hover:bg-brand-pink transition-colors">Add to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Placeholder Item Card 3 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="https://via.placeholder.com/300x200?text=Basketball" alt="Basketball" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Outdoor Basketball</h3>
-                                <p class="text-gray-600 text-sm mt-1">Used - Fair Condition</p>
-                                <p class="text-brand-purple font-bold mt-2">₹500</p>
-                                <button class="mt-4 w-full bg-brand-purple text-white py-2 px-4 rounded-md hover:bg-brand-pink transition-colors">Add to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Placeholder Item Card 4 -->
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="https://via.placeholder.com/300x200?text=Running+Shoes" alt="Running Shoes" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Running Shoes (Size 9)</h3>
-                                <p class="text-gray-600 text-sm mt-1">Used - Good Condition</p>
-                                <p class="text-brand-purple font-bold mt-2">₹2000</p>
-                                <button class="mt-4 w-full bg-brand-purple text-white py-2 px-4 rounded-md hover:bg-brand-pink transition-colors">Add to Cart</button>
-                            </div>
-                        </div>
+                    <div id="category-items-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                     </div>
                 </div>
             </section>
@@ -271,6 +233,46 @@
                 }
             });
         });
+    </script>
+    <script>
+    (async function() {
+        const CATEGORY = 'sports-fitness';
+
+        const { data: listings, error } = await supabaseClient
+            .from('listings')
+            .select('*')
+            .eq('category', CATEGORY)
+            .eq('status', 'available')
+            .order('created_at', { ascending: false });
+
+        const grid = document.getElementById('category-items-grid');
+
+        if (listings && listings.length > 0) {
+            grid.innerHTML = listings.map(item => `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
+                    <img src="${item.image_url || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${item.title}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900">${item.title}</h3>
+                        <p class="text-gray-600 text-sm mt-1">${item.description || ''}</p>
+                        <p class="text-brand-purple font-bold mt-2 text-lg">₹${item.price}</p>
+                        ${item.address ? `<p class="text-gray-400 text-xs mt-1">📍 ${item.address}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            grid.innerHTML = `
+                <div class="sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12">
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">No items listed yet</h3>
+                    <p class="mt-1 text-sm text-gray-500">Check back soon, or be the first to list something here.</p>
+                    <div class="mt-6">
+                        <a href="sell_item.html" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-pink">
+                            List an Item
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+    })();
     </script>
 </body>
 </html>
