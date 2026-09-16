@@ -118,13 +118,11 @@
             </nav>
             <div id="mobile-menu" class="hidden md:hidden">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Browse</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Sell</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Categories</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Help</a>
-                    <a href="#" class="block w-full text-left px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple rounded-lg">
-                        Sign In
-                    </a>
+                    <a href="home.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Browse</a>
+                    <button id="mobile-notification-btn" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Notifications</button>
+                    <button id="mobile-wishlist-btn" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Wishlist</button>
+                    <button id="mobile-cart-btn" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Cart</button>
+                    <a href="profile.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Profile</a>
                 </div>
             </div>
         </header>
@@ -194,6 +192,14 @@
                 menu.classList.add('hidden');
             }
         });
+        const mobileNotifBtn = document.getElementById('mobile-notification-btn');
+        if (mobileNotifBtn) mobileNotifBtn.addEventListener('click', () => document.getElementById('notification-button').click());
+
+        const mobileWishlistBtn = document.getElementById('mobile-wishlist-btn');
+        if (mobileWishlistBtn) mobileWishlistBtn.addEventListener('click', () => document.getElementById('wishlist-button').click());
+
+        const mobileCartBtn = document.getElementById('mobile-cart-btn');
+        if (mobileCartBtn) mobileCartBtn.addEventListener('click', () => document.getElementById('cart-button').click());
 
         // --- Centralized Bubble Toggling Logic ---
         const bubblesConfig = [
