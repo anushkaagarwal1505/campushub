@@ -31,6 +31,8 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
 </head>
 <body class="font-sans antialiased text-gray-900 bg-gray-50">
 
@@ -62,7 +64,7 @@
                     <h1 class="text-3xl font-bold text-gray-900 text-center">Leave a Review</h1>
                     <p class="mt-4 text-lg text-gray-600 text-center">Share your experience with CampusTrade!</p>
 
-                    <form class="mt-8 space-y-6">
+                    <form id="review-form" class="mt-8 space-y-6">
                         <div>
                             <label for="rating" class="block text-center text-lg font-medium text-gray-700">Rating</label>
                             <div class="mt-2 flex items-center justify-center space-x-1" id="star-rating-container">
@@ -85,6 +87,7 @@
                         </div>
 
                         <div>
+                            <p id="review-message" class="text-center text-sm invisible">Message</p>
                             <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-gradient-to-r from-brand-pink to-brand-purple hover:opacity-90 transition-opacity">
                                 Submit Review
                             </button>
@@ -173,6 +176,62 @@
             starContainer.addEventListener('mouseout', function() {
                 highlightStars(currentRating); // Revert to clicked rating on mouseout
             });
+            (async function() {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+
+                const reviewForm = document.getElementById('review-form');
+                const reviewMessage = document.getElementById('review-message');
+
+                reviewForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+
+                    if (!session) {
+                        reviewMessage.textContent = 'Please sign in to leave a review.';
+                        reviewMessage.className = 'text-center text-sm text-red-500';
+                        setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+                        return;
+                    }
+
+                    const rating = parseInt(document.getElementById('selected-rating').value);
+                    const comment = document.getElementById('comment').value.trim();
+
+                    if (rating === 0) {
+                        reviewMessage.textContent = 'Please select a star rating.';
+                        reviewMessage.className = 'text-center text-sm text-red-500';
+                        return;
+                    }
+                
+
+                    const submitButton = reviewForm.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Submitting...';
+
+                    const { error } = await supabaseClient.from('reviews').insert({
+                        reviewer_id: session.user.id,
+                        rating: rating,
+                        comment: comment
+                    });
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Review';
+
+                    if (error) {
+                    reviewMessage.textContent = 'Error: ' + error.message;
+                    reviewMessage.className = 'text-center text-sm text-red-500';
+                    return;
+                    
+                    }
+
+                    reviewMessage.textContent = 'Thank you! Your review has been submitted.';
+                    reviewMessage.className = 'text-center text-sm text-green-600';
+                    reviewForm.reset();
+                    document.querySelectorAll('.star-icon').forEach(star => {
+                        star.classList.remove('text-yellow-400');
+                        star.classList.add('text-gray-300');
+                    });
+                    document.getElementById('selected-rating').value = 0;
+                });
+            })();
         });
     </script>
 </body>
