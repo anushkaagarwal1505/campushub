@@ -242,9 +242,14 @@
     </script>
     <script>
     (async function() {
-        const CATEGORY = 'sports-fitness';
+        const CATEGORY = 'sports-fitness'; 
+        function esc(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
 
-        const { data: listings, error } = await supabaseClient
+        const { data: listings } = await supabaseClient
             .from('listings')
             .select('*')
             .eq('category', CATEGORY)
@@ -255,13 +260,17 @@
 
         if (listings && listings.length > 0) {
             grid.innerHTML = listings.map(item => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden group">
-                    <img src="${item.image_url || 'https://via.placeholder.com/400x300?text=No+Image'}" alt="${item.title}" class="w-full h-48 object-cover">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="${esc(item.image_url || 'https://via.placeholder.com/400x300?text=No+Image')}" alt="${esc(item.title)}" class="w-full h-48 object-cover">
                     <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-900">${item.title}</h3>
-                        <p class="text-gray-600 text-sm mt-1">${item.description || ''}</p>
-                        <p class="text-brand-purple font-bold mt-2 text-lg">₹${item.price}</p>
-                        ${item.address ? `<p class="text-gray-400 text-xs mt-1">📍 ${item.address}</p>` : ''}
+                        <h3 class="text-lg font-semibold text-gray-900">${esc(item.title)}</h3>
+                        <p class="text-gray-600 text-sm mt-1">${esc(item.description)}</p>
+                        <p class="text-brand-purple font-bold mt-2 text-lg">₹${esc(item.price)}</p>
+                        ${item.address ? `<p class="text-gray-400 text-xs mt-1">📍 ${esc(item.address)}</p>` : ''}
+                        <div class="mt-4 flex gap-2">
+                            <button data-action="cart" data-id="${esc(item.id)}" data-seller="${esc(item.seller_id)}" data-title="${esc(item.title)}" class="flex-1 text-sm font-medium py-2 rounded-md text-white bg-brand-purple hover:bg-brand-pink">Add to Cart</button>
+                            <button data-action="wishlist" data-id="${esc(item.id)}" data-seller="${esc(item.seller_id)}" data-title="${esc(item.title)}" class="text-sm font-medium px-3 py-2 rounded-md border border-brand-purple text-brand-purple hover:bg-purple-50" aria-label="Add to wishlist">♡</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -271,14 +280,62 @@
                     <h3 class="mt-2 text-lg font-medium text-gray-900">No items listed yet</h3>
                     <p class="mt-1 text-sm text-gray-500">Check back soon, or be the first to list something here.</p>
                     <div class="mt-6">
-                        <a href="sell_item.html" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-pink">
-                            List an Item
-                        </a>
+                        <a href="sell_item.html" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-pink">List an Item</a>
                     </div>
                 </div>
             `;
         }
+
+        grid.addEventListener('click', async function(e) {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) { window.location.href = 'index.html'; return; }
+
+            if (btn.dataset.seller === session.user.id) {
+                alert('This is your own listing.');
+                return;
+            }
+
+            const isCart = btn.dataset.action === 'cart';
+            const table = isCart ? 'cart_items' : 'wishlist_items';
+
+            btn.disabled = true;
+            const { error } = await supabaseClient.from(table).insert({
+                user_id: session.user.id,
+                listing_id: btn.dataset.id
+            });
+
+            if (error) {
+                if (error.code === '23505') {
+                    btn.textContent = isCart ? 'In Cart ✓' : '♥';
+                } else {
+                    alert('Error: ' + error.message);
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            await supabaseClient.from('notifications').insert({
+                user_id: btn.dataset.seller,
+                message: 'Someone added your item "' + btn.dataset.title + '" to their ' + (isCart ? 'cart' : 'wishlist') + '.'
+            });
+
+            btn.textContent = isCart ? 'Added ✓' : '♥';
+        });
     })();
-    </script>
+</script>
+<script>
+    [['notification-button', 'notifications.html'],
+     ['wishlist-button', 'wishlist.html'],
+     ['cart-button', 'cart.html']].forEach(function(pair) {
+        var btn = document.getElementById(pair[0]);
+        if (btn) btn.addEventListener('click', function(e) {
+            e.stopImmediatePropagation();
+            window.location.href = pair[1];
+        }, true);
+    });
+</script>
 </body>
 </html>
