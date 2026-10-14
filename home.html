@@ -652,6 +652,16 @@
             });
         });
     </script>
-
+<script>
+    [['notification-button', 'notifications.html'],
+     ['wishlist-button', 'wishlist.html'],
+     ['cart-button', 'cart.html']].forEach(function(pair) {
+        var btn = document.getElementById(pair[0]);
+        if (btn) btn.addEventListener('click', function(e) {
+            e.stopImmediatePropagation();
+            window.location.href = pair[1];
+        }, true);
+    });
+</script>
 </body>
 </html>
