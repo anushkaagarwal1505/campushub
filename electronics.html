@@ -328,15 +328,18 @@
     })();
 </script>
 <script>
-    [['notification-button', 'notifications.html'],
-     ['wishlist-button', 'wishlist.html'],
-     ['cart-button', 'cart.html']].forEach(function(pair) {
-        var btn = document.getElementById(pair[0]);
-        if (btn) btn.addEventListener('click', function(e) {
-            e.stopImmediatePropagation();
-            window.location.href = pair[1];
-        }, true);
-    });
+    document.addEventListener('click', function(e) {
+        var pages = {
+            'cart-button': 'cart.html',
+            'wishlist-button': 'wishlist.html',
+            'notification-button': 'notifications.html'
+        };
+        var btn = e.target.closest('#cart-button, #wishlist-button, #notification-button');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = pages[btn.id];
+    }, true);
 </script>
 </body>
 </html>
